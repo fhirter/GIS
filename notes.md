@@ -4,26 +4,20 @@
 SELECT  DISTINCT  OWNER FROM raw order by OWNER;
 ```
 
-todo: select distinct egrid IDs then join the other data, owners comma separated
+## joins
 
-
-
-```sql
-SELECT DISTINCT kanton.*, unlock.*
-FROM raw as unlock
-JOIN main.greika as kanton
-    ON kanton.EGRID = unlock.EGRID;
-```
-```sql
-SELECT DISTINCT kanton.EGRID FROM main.greika AS kanton
-```
-
-all onwers comma separated
-
+select all from greika/kanton then add owner data from unlock as a comma separated column `OWNERS`
 ```sql
 SELECT 
-    EGRID,
-    GROUP_CONCAT(OWNER, ', ') AS OWNERS
-FROM main.raw
-GROUP BY EGRID;
+    kanton.*,
+    GROUP_CONCAT(unlock.OWNER, ', ') AS OWNERS
+FROM 
+    main.greika as kanton
+LEFT JOIN 
+    main.raw as unlock
+ON 
+    kanton.EGRID = unlock.EGRID
+GROUP BY 
+    kanton.EGRID
 ```
+
